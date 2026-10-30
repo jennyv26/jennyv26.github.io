@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Jenny Vo, electrical and computer engineering student at Olin College: embedded systems, FPGA design and hardware-software projects.">
+<title>Jenny Vo | Electrical & Computer Engineering</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:#f3f8f0;color:#171717}
+code,.font-mono{font-family:'JetBrains Mono',monospace}
+code{font-size:.85em;background:#f3f3f3;padding:.05rem .3rem;border-radius:.25rem}
+.anchor{scroll-margin-top:5rem}
+[hidden]{display:none!important}
+a:focus-visible,button:focus-visible{outline:2px solid #171717;outline-offset:2px}
+#fpga-media button:focus-visible{outline-color:#fff}
+
+#site-nav{background:rgba(243,248,240,.85);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid #e5e5e5}
+.nav-link{color:#737373;padding:.25rem 0;border-bottom:1px solid transparent;transition:color .15s,border-color .15s}
+.nav-link:hover{color:#171717}
+.nav-link.active{color:#171717;border-bottom-color:#171717}
+.skip-link{position:fixed;top:.5rem;left:.5rem;z-index:100;padding:.5rem .9rem;background:#fff;border:1px solid #171717;border-radius:.375rem;font-size:.8rem;transform:translateY(-200%)}
+.skip-link:focus{transform:none}
+.no-scrollbar{scrollbar-width:none;-ms-overflow-style:none}
+.no-scrollbar::-webkit-scrollbar{display:none}
+.text-link{text-decoration:underline;text-underline-offset:4px;text-decoration-color:#d4d4d4;transition:text-decoration-color .15s,color .15s}
+.text-link:hover{color:#171717;text-decoration-color:#171717}
+
+/* Filters and tags */
+.filter-btn{display:inline-flex;align-items:center;gap:.45rem;padding:.3rem .8rem;font-size:.8rem;color:#525252;background:rgba(255,255,255,.7);border:1px solid #d4d4d4;border-radius:9999px;transition:background-color .15s,color .15s,border-color .15s}
+.filter-btn:hover{border-color:#a3a3a3;color:#171717;background:#fff}
+.filter-btn[aria-pressed="true"],#skill-chip{background:#171717;border-color:#171717;color:#fff}
+#skill-chip:hover{background:#404040;color:#fff}
+.tag{padding:.15rem .65rem;font-size:.72rem;color:#525252;background:#f3f3f3;border-radius:9999px;transition:background-color .15s,color .15s}
+.tag:hover,.tag.on{background:#171717;color:#fff}
+
+/* Project cards */
+.card{transition:border-color .2s,box-shadow .2s}
+.card:hover{border-color:#a3a3a3;box-shadow:0 10px 28px -14px rgba(0,0,0,.2)}
+.skill-note{padding:.55rem .75rem;font-size:.8rem;line-height:1.5;color:#404040;background:#f3f8f0;border-left:2px solid #171717;border-radius:0 .375rem .375rem 0}
+
+/* Skills */
+.skill{display:inline-block;padding:.2rem .65rem;font-size:.8rem;color:#404040;background:#fff;border:1px solid #e5e5e5;border-radius:9999px}
+.skill-link{border-color:#737373;cursor:pointer;transition:background-color .15s,color .15s,border-color .15s}
+.skill-link:hover{background:#171717;border-color:#171717;color:#fff}
+.skill-link:hover .skill-n{color:#a3a3a3}
+
+/* Details dialog */
+dialog.pd{width:min(42rem,calc(100% - 2rem));max-height:calc(100% - 3rem);margin:auto;padding:0;border:1px solid #d4d4d4;border-radius:.875rem;background:#fff;color:#171717;overflow:auto}
+dialog.pd::backdrop{background:rgba(23,23,23,.45);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+dialog.pd[open]{animation:pd-in .2s ease-out}
+@keyframes pd-in{from{opacity:0;transform:translateY(8px)}}
+@media (prefers-reduced-motion:reduce){dialog.pd[open]{animation:none}}
+body:has(dialog[open]){overflow:hidden}
+
+/* Game of Life tabs */
+.tab-btn{padding:.25rem .75rem;font-size:.75rem;color:#a3a3a3;border-radius:9999px;transition:background-color .15s,color .15s}
+.tab-btn[aria-pressed="true"]{background:#fff;color:#171717}
+
+/* RISC-V stepper */
+.rv-chip{display:flex;flex-direction:column;align-items:center;padding:.3rem .1rem;border:1px solid #d4d4d4;border-radius:.375rem;background:#fff;font-size:10px;line-height:1.25;color:#525252;transition:background-color .2s,color .2s,opacity .2s}
+.rv-chip b{font-weight:600;font-size:11px}
+.rv-chip.on{background:#171717;border-color:#171717;color:#fff}
+.rv-chip.skip{opacity:.4;border-style:dashed}
+.rv-line{padding:0 .25rem;border-radius:3px;white-space:pre}
+.rv-line.on{background:#171717;color:#fff}
+.rv-val{padding:0 .25rem;border-radius:3px;transition:background-color .4s}
+.rv-val.hit{background:#d1fae5}
+.rv-row{display:flex;justify-content:space-between}
+
+/* Schematic */
+.schematic{position:relative;display:flex;flex-direction:column;gap:2.25rem;padding:2.25rem 1rem 2.25rem 3.25rem;border:1px solid #d4d4d4;border-radius:.75rem;background-color:#fafcf8;background-image:radial-gradient(#cfd8c8 1px,transparent 1px);background-size:18px 18px}
+.schematic::before{content:'';position:absolute;left:1rem;top:1.9rem;bottom:1.25rem;width:4px;background:#171717;border-radius:2px}
+.bus-label{position:absolute;left:.5rem;top:.5rem;font:600 10px 'JetBrains Mono',monospace;color:#171717}
+.gnd{position:absolute;left:8px;bottom:.5rem;width:20px;height:12px;background:linear-gradient(#171717,#171717) 0 0/20px 3px no-repeat,linear-gradient(#171717,#171717) 4px 4.5px/12px 3px no-repeat,linear-gradient(#171717,#171717) 7px 9px/6px 3px no-repeat}
+.gnd::after{content:'GND';position:absolute;left:26px;top:-1px;font:600 10px 'JetBrains Mono',monospace;color:#171717}
+.sch-row{position:relative;transition:opacity .2s,filter .2s}
+.sch-row::before{content:'';position:absolute;left:-2.25rem;top:39px;width:2.25rem;height:4px;background:#171717;transition:background-color .2s}
+.sch-row::after{content:'';position:absolute;left:calc(-2.25rem - 4.5px);top:34.5px;width:13px;height:13px;border-radius:50%;background:#171717;transition:background-color .2s}
+.sch-row:hover::before,.sch-row:hover::after{background:#059669}
+.sch-row.dim{opacity:.3;filter:grayscale(1)}
+.chip{position:relative;display:grid;background:#fff;border:2px solid #171717;border-radius:.5rem;transition:border-color .2s,box-shadow .2s}
+.chip::before,.chip::after{content:'';position:absolute;top:1rem;bottom:1rem;width:10px;background:repeating-linear-gradient(#171717 0 6px,transparent 6px 20px)}
+.chip::before{left:-12px}
+.chip::after{right:-12px}
+.sch-row:hover .chip{border-color:#059669;box-shadow:0 10px 28px -16px rgba(5,150,105,.5)}
+.chip-head{padding-bottom:.65rem;border-bottom:1px solid #e5e5e5}
+.chip-left{cursor:pointer}
+.sch-row{display:flex}
+.chip{grid-template-rows:auto 1fr;flex:1;min-width:0}
+.chip-media{order:-1;overflow:hidden;border-bottom:2px solid #171717;border-radius:.375rem .375rem 0 0}
+@media (min-width:768px){
+  .schematic{display:grid;grid-template-columns:minmax(0,1fr) 3.5rem minmax(0,1fr);column-gap:0;row-gap:2.25rem;padding:2.25rem 1.25rem}
+  .schematic::before{left:calc(50% - 2px)}
+  .bus-label{left:calc(50% - 12px)}
+  .gnd{left:calc(50% - 10px)}
+  .sch-row:nth-of-type(odd){grid-column:1}
+  .sch-row:nth-of-type(even){grid-column:3}
+  .sch-row:nth-of-type(odd)::before{left:100%;width:1.75rem}
+  .sch-row:nth-of-type(odd)::after{left:calc(100% + 1.75rem - 6.5px)}
+  .sch-row:nth-of-type(even)::before{left:-1.75rem;width:1.75rem}
+  .sch-row:nth-of-type(even)::after{left:calc(-1.75rem - 6.5px)}
+}
+.led{display:inline-block;width:.6rem;height:.6rem;border-radius:50%;background:#a3a3a3}
+.led.on{background:#10b981;box-shadow:0 0 0 3px #d1fae5}
+</style>
+</head>
+<body class="min-h-screen antialiased selection:bg-neutral-200 selection:text-neutral-900">
+
+<a href="#projects" class="skip-link font-mono">Skip to projects</a>
+
+<nav id="site-nav" class="fixed top-0 inset-x-0 z-50" aria-label="Primary">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+    <a href="#about" class="shrink-0 inline-flex items-center gap-2 font-semibold text-sm text-neutral-900 group" aria-label="Jenny Vo, back to top">
+      <i class="fa-solid fa-cat text-neutral-400 group-hover:text-neutral-700 transition-colors" aria-hidden="true"></i>
+      <span class="hidden sm:inline">Jenny Vo</span>
+    </a>
+    <div class="flex items-center gap-3 sm:gap-5 text-xs sm:text-sm min-w-0 ml-4 px-1 py-2 overflow-x-auto whitespace-nowrap no-scrollbar">
+      <a href="#about" class="nav-link" data-section="about">About</a>
+      <a href="#projects" class="nav-link" data-section="projects">Projects</a>
+      <a href="#experience" class="nav-link" data-section="experience">Experience</a>
+      <a href="#awards" class="nav-link" data-section="awards">Awards</a>
+      <a href="#skills" class="nav-link" data-section="skills">Skills</a>
+      <a href="#contact" class="nav-link" data-section="contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<div class="max-w-6xl mx-auto px-6 pt-28 pb-16">
+
+  <!-- About -->
+  <header id="about" class="anchor mb-20">
+    <div class="flex flex-col sm:flex-row items-center sm:items-start gap-8 sm:gap-10">
+      <div class="shrink-0">
+        <div class="w-40 h-40 sm:w-56 sm:h-56 rounded-full overflow-hidden border border-neutral-200 bg-neutral-100">
+          <img src="images/me with apple.jpg" alt="Portrait of Jenny Vo" class="w-full h-full object-cover" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="max-w-3xl text-center sm:text-left">
+        <h1 class="text-4xl font-semibold tracking-tight text-neutral-900">Jenny Vo <i class="fa-solid fa-cat text-neutral-400 text-2xl align-middle ml-1 hover:text-neutral-700 transition-colors" aria-hidden="true"></i></h1>
+        <p class="text-neutral-500 mt-2">Electrical & Computer Engineering at Olin College of Engineering</p>
+        <p class="text-neutral-700 leading-relaxed mt-6">I'm an engineering student focusing on hardware-software design. My experience covers embedded firmware, SystemVerilog, and analog/digital circuit prototyping. I build microcontroller projects with Arduino and Python libraries for data processing and hardware integration.</p>
+        <p class="text-sm text-neutral-600 leading-relaxed mt-4">
+          <span class="inline-flex items-center gap-1.5 font-medium text-neutral-900"><span class="inline-block w-2 h-2 rounded-full bg-emerald-500" aria-hidden="true"></span>Currently</span>
+          building a multicycle 32-bit <a href="#project-riscv" data-show-all class="text-link">RISC-V processor</a> in SystemVerilog for Computer Architecture, and designing a <a href="#project-sticker" data-show-all class="text-link">CNC sticker maker</a> with my PIE team.
+        </p>
+        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-5 gap-y-2 mt-6 text-sm text-neutral-600">
+          <a href="https://github.com/jennyvo926" target="_blank" rel="noopener noreferrer" class="text-link inline-flex items-center gap-1.5"><i class="fa-brands fa-github"></i> GitHub</a>
+          <a href="https://www.linkedin.com/in/jenny-vo-05a2062b9/" target="_blank" rel="noopener noreferrer" class="text-link inline-flex items-center gap-1.5"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+          <a href="mailto:jvo@olin.edu" class="text-link inline-flex items-center gap-1.5"><i class="fa-regular fa-envelope"></i> Email</a>
+          <a href="images/JennyVoResume%20(1).pdf" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-neutral-900 text-white hover:bg-neutral-700 transition-colors"><i class="fa-regular fa-file-lines"></i> Resume</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Projects (cards are generated from the PROJECTS list in the script below) -->
+  <section id="projects" class="anchor mb-20">
+    <div class="mb-8 space-y-4">
+      <h2 class="text-xl font-semibold tracking-tight text-neutral-900">Projects</h2>
+      <p class="text-sm text-neutral-500">Each project is a component on the board. A green LED means it is in progress. Click a component to open its details.</p>
+      <div class="flex flex-wrap items-center gap-2" id="filter-bar" role="group" aria-label="Filter projects by tag">
+        <button type="button" id="skill-chip" class="filter-btn" hidden><i class="fa-solid fa-xmark text-xs" aria-hidden="true"></i><span id="skill-chip-label"></span></button>
+        <span id="filter-status" class="ml-auto text-xs text-neutral-500" aria-live="polite"></span>
+      </div>
+    </div>
+    <div id="projects-grid" class="schematic"></div>
+    <p id="more-row" class="mt-6 text-center text-sm text-neutral-500"><i class="fa-solid fa-cat text-neutral-300 mr-2" aria-hidden="true"></i>More projects on the way.</p>
+  </section>
+
+  <!-- Experience -->
+  <section id="experience" class="anchor mb-20">
+    <h2 class="text-xl font-semibold tracking-tight text-neutral-900 mb-8">Experience</h2>
+    <div class="border-t border-neutral-200 divide-y divide-neutral-200 border-b">
+      <article class="grid md:grid-cols-[12rem_1fr] gap-2 md:gap-8 py-6">
+        <p class="text-sm text-neutral-500">2025 to 2026</p>
+        <div>
+          <h3 class="font-semibold text-neutral-900">Electrical Subteam</h3>
+          <p class="text-sm text-neutral-500 mt-0.5">Olin Baja, Needham, Massachusetts</p>
+          <ul class="list-disc list-inside space-y-1 text-sm text-neutral-600 leading-relaxed mt-3">
+            <li>Researched a GPS-based data acquisition system to capture race telemetry and generate accurate vehicle path traces for performance analysis.</li>
+            <li>Integrated brake light and kill switch systems.</li>
+            <li>Performed rapid electrical troubleshooting and repairs under tight pit-stop time constraints during an endurance competition, ensuring safety compliance and maximum uptime.</li>
+          </ul>
+        </div>
+      </article>
+      <article class="grid md:grid-cols-[12rem_1fr] gap-2 md:gap-8 py-6">
+        <p class="text-sm text-neutral-500">Expected May 2029</p>
+        <div>
+          <h3 class="font-semibold text-neutral-900">B.S. Electrical and Computer Engineering</h3>
+          <p class="text-sm text-neutral-500 mt-0.5">Olin College of Engineering, Needham, Massachusetts</p>
+          <p class="text-sm text-neutral-600 leading-relaxed mt-3">Relevant coursework: Model Simulation, Quantitative Engineering Analysis, Software Design, Introduction to Sensors, Instrumentation and Measurement, Computer Architecture.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Awards -->
+  <section id="awards" class="anchor mb-20">
+    <h2 class="text-xl font-semibold tracking-tight text-neutral-900 mb-8">Awards</h2>
+    <div class="border-t border-neutral-200 border-b">
+      <article class="grid md:grid-cols-[12rem_1fr] gap-2 md:gap-8 py-6">
+        <p class="text-sm text-neutral-500">February 2026</p>
+        <div>
+          <h3 class="font-semibold text-neutral-900 flex items-center gap-2"><i class="fa-solid fa-trophy text-neutral-400 text-sm" aria-hidden="true"></i>2nd Place, Healthcare Track</h3>
+          <p class="text-sm text-neutral-500 mt-0.5">MakeMIT x Harvard Hackathon</p>
+          <p class="text-sm text-neutral-600 leading-relaxed mt-3">Built the electrical system for a desk companion robot on a 6-person team, designing circuitry for sensors, motors and an LCD interface.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Skills (generated from the same PROJECTS list) -->
+  <section id="skills" class="anchor mb-20">
+    <h2 class="text-xl font-semibold tracking-tight text-neutral-900 mb-2">Skills</h2>
+    <p class="text-sm text-neutral-500 mb-8">Click a skill with a dark outline to see the projects that use it and how. The number is how many projects use it.</p>
+    <div id="skills-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"></div>
+  </section>
+
+  <footer id="contact" class="anchor pt-8 border-t border-neutral-200 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-neutral-500">
+    <p class="inline-flex items-center gap-2">© 2026 Jenny Vo <i class="fa-solid fa-cat text-neutral-400" aria-hidden="true"></i></p>
+    <div class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+      <a href="mailto:jvo@olin.edu" class="text-link">Email</a>
+      <a href="https://github.com/jennyvo926" target="_blank" rel="noopener noreferrer" class="text-link">GitHub</a>
+      <a href="https://www.linkedin.com/in/jenny-vo-05a2062b9/" target="_blank" rel="noopener noreferrer" class="text-link">LinkedIn</a>
+      <a href="images/JennyVoResume%20(1).pdf" target="_blank" rel="noopener noreferrer" class="text-link">Resume</a>
+    </div>
+  </footer>
+</div>
+
+<!-- Project details dialog -->
+<dialog id="pd" class="pd" aria-labelledby="pd-title">
+  <div class="p-6 sm:p-8">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <h3 id="pd-title" class="text-xl font-semibold text-neutral-900"></h3>
+        <p id="pd-tools" class="text-sm text-neutral-500 mt-1"></p>
+      </div>
+      <button type="button" id="pd-close" class="shrink-0 w-8 h-8 inline-flex items-center justify-center rounded-full border border-neutral-200 text-neutral-500 hover:text-neutral-900 hover:border-neutral-900 transition-colors" aria-label="Close details"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+    </div>
+    <div id="pd-body" class="mt-5 space-y-5 text-sm text-neutral-600 leading-relaxed"></div>
+    <div class="flex items-center justify-between mt-8 pt-4 border-t border-neutral-100 text-sm text-neutral-600">
+      <button type="button" id="pd-prev" class="inline-flex items-center gap-1.5 hover:text-neutral-900"><i class="fa-solid fa-chevron-left text-xs" aria-hidden="true"></i>Previous</button>
+      <span id="pd-count" class="text-xs text-neutral-500"></span>
+      <button type="button" id="pd-next" class="inline-flex items-center gap-1.5 hover:text-neutral-900">Next<i class="fa-solid fa-chevron-right text-xs" aria-hidden="true"></i></button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* ------------------------------------------------------------------
+   PROJECTS: edit this list to add or change projects. Each project's
+   "skills" object powers the skill filter, the skill notes on the card,
+   and the "How I used each tool" list in the details dialog.
+------------------------------------------------------------------- */
+const TAGS = {
+  fpga: ['FPGA', 'fa-solid fa-microchip'], python: ['Python', 'fa-brands fa-python'],
+  arduino: ['Arduino', 'fa-solid fa-infinity'], vision: ['Computer vision', 'fa-solid fa-eye'],
+  hardware: ['Hardware', 'fa-solid fa-screwdriver-wrench']
+};
+
+const PROJECTS = [
+  {
+    id: 'riscv', wide: true, media: 'riscv', status: 'In progress',
+    title: 'Multicycle RISC-V Processor (RV32I)',
+    tools: 'SystemVerilog, RISC-V, OSS CAD Suite, iceBlinkPico',
+    tags: ['fpga', 'hardware'],
+    desc: 'A 32-bit RISC-V processor built from scratch in SystemVerilog. It runs one instruction at a time, uses separate instruction and data memories, and will blink the iceBlinkPico LEDs by running an assembly program on its own hardware. The animation is a visualization: it steps a tiny hard-coded program through the five stages the core will use.',
+    overview: 'The processor is unpipelined and multicycle with a Harvard architecture: instruction and data memories are separate but share one address space. A provided memory module supplies 8 kB of physical memory, with 4 kB of data memory from <code>0x0000</code> to <code>0x0FFF</code> and 4 kB of instruction memory from <code>0x1000</code> to <code>0x1FFF</code>. Memory-mapped peripherals at the top of the address space include 8-bit PWM generators for the user LED and RGB LEDs, plus two running 32-bit timers that count milliseconds and microseconds.',
+    points: [
+      '<strong>Instruction set:</strong> the full RV32I base set, except ecall, ebreak and the CSR instructions.',
+      '<strong>Design:</strong> synthesizable SystemVerilog that uses the provided memory module.',
+      '<strong>Verification:</strong> an iverilog testbench with simulation results for each class of RV32I instruction.',
+      '<strong>Demo:</strong> a RISC-V assembly program that blinks the LEDs through the peripherals in an interesting pattern.'
+    ],
+    toolchain: 'OSS CAD Suite, Icarus Verilog. Group project.',
+    links: [], note: 'Expected December 2026, repo coming soon',
+    skills: {
+      'SystemVerilog': 'Datapath, control and memory-mapped peripherals written from scratch.',
+      'OSS CAD Suite': 'Synthesis and simulation toolchain for the core.',
+      'Icarus Verilog': 'Testbench with results for each class of RV32I instruction (planned).',
+      'iCE40 FPGA': 'Runs on the iceBlinkPico, blinking LEDs through memory-mapped PWM.'
+    }
+  },
+  {
+    id: 'sticker', media: 'gantry', status: 'In progress',
+    title: 'CNC Sticker Maker',
+    tools: 'Arduino, stepper motors, servo, X/Y gantry',
+    tags: ['arduino', 'hardware'],
+    desc: 'A page-sized X/Y gantry that draws sticker designs with a marker. Stepper motors move the carriage, a servo lifts and lowers the pen, and an Arduino runs the motion from a drawing program. Team project with four teammates.',
+    overview: 'For the MVP we want to build a roughly page-sized X/Y gantry driven by stepper motors, using either belts or leadscrews. A Sharpie or other marker is attached to the gantry through a servo-driven up/down mechanism, and software on an Arduino actuates the motors and servo from a drawing program. Users pick from a list of preset sticker designs.',
+    points: [
+      '<strong>Minimum Viable Product:</strong> draw preset stickers with the X/Y gantry and a servo-lifted marker.',
+      '<strong>Software stretch goals:</strong> let users draw their own designs, which means calculating the points and paths the gantry follows, and a Raspberry Pi display for picking pre-drawn designs.'
+    ],
+    links: [], note: 'Design stage',
+    skills: { 'Arduino / C++': 'Planned: runs the stepper and servo motion from a drawing program.' }
+  },
+  {
+    id: 'fpga', media: 'life',
+    title: 'FPGA Game of Life & Color Cycling Matrix',
+    tools: 'SystemVerilog, Python, iCE40 FPGA',
+    tags: ['fpga', 'python', 'hardware'],
+    desc: 'A hardware implementation of Conway’s Game of Life that steps through generations while cycling living cell colors along the hue color wheel. The glider above runs on the same rules: it wraps around the edges and shifts color each generation.',
+    overview: 'The system reads initial state data for a starting glider pattern from <code>glider.txt</code>. Generational updates are calculated by the <code>life.sv</code> SystemVerilog module, which evaluates living neighbors for each cell position and implements boundary wrap-around indexing using modulo arithmetic.',
+    points: [
+      '<strong>Color cycling logic:</strong> <code>make_color.py</code> generates RGB hue sequences saved as memory text files inside the <code>life/</code> directory.',
+      '<strong>Hardware state machine:</strong> A hardware counter steps through color values at every generational step update.',
+      '<strong>Waveform verification:</strong> Grid transition timing and <code>next_grid</code> calculation verified using GTKWave simulation analysis.'
+    ],
+    toolchain: 'Yosys, iverilog, GTKWave, Python 3',
+    links: [['Repo', 'https://github.com/jennyv26/CompArch-MP-3-Game-of-Life-LED-Matrix.git'], ['Demo', 'https://drive.google.com/file/d/10MSP4v-RzhCrq7BJavnGrCpObI3DiqYJ/view?usp=sharing']],
+    skills: {
+      'SystemVerilog': 'life.sv counts live neighbors for every cell and wraps the edges with modulo indexing.',
+      'Python': 'make_color.py generates the RGB hue sequences saved as memory text files.',
+      'iCE40 FPGA': 'Target board for the Game of Life and the color-cycling counter.',
+      'Yosys': 'Synthesizes the SystemVerilog design for the iCE40.',
+      'Icarus Verilog': 'Simulated the design with iverilog before loading it on hardware.',
+      'GTKWave': 'Checked next_grid and generation timing in the waveforms.',
+      'OSS CAD Suite': 'Bundles the synthesis and simulation tools used here.'
+    }
+  },
+  {
+    id: 'bubble', media: 'img', img: 'images/bubbleGameImage.png', alt: 'Interactive River Bubble Game preview',
+    title: 'Interactive River Bubble Game',
+    tools: 'Python, Pygame, OpenCV, MediaPipe, PyTest',
+    tags: ['python', 'vision'],
+    desc: 'A 2D interactive arcade game featuring real-time webcam gesture tracking, allowing players to interact with floating river bubbles using computer vision techniques.',
+    overview: 'Developed with a team of three at Olin College, an interactive game that implements MediaPipe and OpenCV to gather input from the game player. The user plays as a bubble that is trying to stay in the water so as not to burst by hitting a rock or land. OpenCV is used to move the bubble sprite. An open left hand with a closed right fist will move the character to the right. An open right hand with a closed left fist will move the character to the left. The objective is to get the bubble to the end of the track without hitting rocks or land.',
+    points: [
+      '<strong>Gesture tracking:</strong> Utilized MediaPipe and OpenCV for hand landmark detection and real-time motion input mapping.',
+      '<strong>Physics & collision logic:</strong> Built custom 2D collision detection and bubble floating dynamics in Pygame.',
+      '<strong>Testing:</strong> Wrote PyTest unit tests to verify game state stability.'
+    ],
+    links: [['Repo', 'https://github.com/olincollege/interactive_bubble_game.git'], ['Live site', 'https://lantner.github.io/Interactive_bubble_game/']],
+    skills: {
+      'Python': 'Game loop, bubble motion and collision logic.',
+      'Pygame': 'Renders the river and bubbles, with custom 2D collision detection.',
+      'OpenCV': 'Captures webcam frames for hand tracking.',
+      'MediaPipe': 'Hand landmark detection, mapped to in-game coordinates.',
+      'Pytest': 'Unit tests that check game state stays stable.'
+    }
+  },
+  {
+    id: 'scanner', media: 'img', img: 'images/emojiresults.png', alt: 'Emoji results of the IR point cloud scanner',
+    title: 'Pan & Tilt 2.5D Scanner',
+    tools: 'Arduino, MATLAB, OnShape',
+    tags: ['arduino', 'hardware'],
+    desc: 'For Principals of Integrated Engineering, I worked with a partner to build a 2.5 dimension scanner using an Arduino, two servo motors, and an IR sensor. A pan and tilt mechanism scans an object of known geometry, then the sensor readings are visualized in MATLAB.',
+    overview: 'I worked on a team of two to create a pan and tilt mechanism in CAD and 3D printed it on Original Prusa MK4S printers with PLA filament. Next, we calibrated the sensor by taking readings at different distances and finding the output voltage, and created a translation equation converting voltage to distance.',
+    points: [
+      '<strong>Data processing:</strong> We took the raw data of the translated distance, pan angle, and tilt angle and uploaded it to MATLAB.',
+      '<strong>Trigonometric mapping:</strong> Using trigonometry, we found the X, Y, and Z distances to plot the image.'
+    ],
+    links: [['Repository', 'https://github.com/jennyv26/PIE-2.5D-Scanner'], ['Project report', 'https://docs.google.com/document/d/1M7WYc7pnE28YcBCi_4GfYvfZ571cP7SURXRBa_KCqwQ/edit']],
+    skills: {
+      'Arduino / C++': 'Drives the two servos and reads the IR sensor.',
+      'MATLAB': 'Turns distance, pan angle and tilt angle into X, Y, Z and plots the scan.',
+    }
+  }
+];
+
+const SKILL_GROUPS = [
+  ['Languages', ['Python', 'SystemVerilog', 'MATLAB', 'Arduino / C++']],
+  ['Python libraries', ['Pygame', 'OpenCV', 'MediaPipe', 'Pytest', 'Pandas']],
+  ['Software and tools', ['OSS CAD Suite', 'Yosys', 'Icarus Verilog', 'GTKWave', 'SolidWorks', 'OnShape']],
+  ['Hardware and fabrication', ['Soldering', 'Circuit prototyping', 'iCE40 FPGA']]
+];
+
+const LIFE_HTML = `
+<div id="fpga-media" class="relative h-full bg-black">
+  <div class="absolute top-3 left-3 z-10 flex items-center gap-0.5 p-0.5 bg-neutral-900 border border-neutral-700 rounded-full" role="group" aria-label="Project media">
+    <button type="button" id="tab-play" class="tab-btn" aria-pressed="true">Game</button>
+    <button type="button" id="tab-video" class="tab-btn" aria-pressed="false">Video</button>
+  </div>
+  <div id="panel-play" class="h-full">
+    <div id="life-wrap" class="relative w-full h-full bg-black">
+      <canvas id="life-canvas" class="absolute inset-0 w-full h-full block" role="img" aria-label="A glider moving across Conway's Game of Life grid with color-cycling cells"></canvas>
+      <label class="absolute bottom-3 left-3 z-10 flex items-center gap-2 px-3 py-1.5 bg-neutral-900 border border-neutral-700 rounded-full text-xs text-neutral-300">
+        <span>Speed</span>
+        <input id="life-speed" type="range" min="1" max="5" step="1" value="3" class="w-24" style="accent-color:#fff" aria-label="Glider speed, 1 slowest to 5 fastest">
+      </label>
+      <button type="button" id="life-play" class="absolute top-3 right-3 z-10 w-8 h-8 inline-flex items-center justify-center bg-neutral-900 border border-neutral-700 rounded-full text-neutral-300 hover:text-white" aria-label="Pause animation" title="Pause animation"><i class="fa-solid fa-pause text-[11px]"></i></button>
+    </div>
+  </div>
+  <div id="panel-video" class="h-full hidden bg-neutral-900">
+    <video id="fpga-video" class="w-full h-full object-cover" controls playsinline preload="metadata"><source src="images/CompArchMP3.mp4" type="video/mp4">Your browser does not support playing this video.</video>
+  </div>
+</div>`;
+
+const RV_HTML = `
+<div id="rv-demo" class="h-full bg-neutral-50 p-4 flex flex-col gap-2 text-neutral-900" role="group" aria-label="Stepper showing a small program running through the five multicycle stages">
+  <div id="rv-chips" class="grid grid-cols-5 gap-1"></div>
+  <div class="grid grid-cols-2 gap-3 flex-1 min-h-0">
+    <ol id="rv-prog" class="font-mono text-[10px] leading-5"></ol>
+    <div id="rv-state" class="font-mono text-[11px] leading-5"></div>
+  </div>
+  <p id="rv-msg" class="text-xs text-neutral-600 leading-snug min-h-[2rem]"></p>
+  <div class="flex items-center gap-2">
+    <button type="button" id="rv-run" class="px-3 py-1 text-xs rounded-md bg-neutral-900 text-white hover:bg-neutral-700 transition-colors">Pause</button>
+    <button type="button" id="rv-step" class="px-3 py-1 text-xs rounded-md border border-neutral-300 bg-white hover:border-neutral-900 transition-colors">Step</button>
+    <button type="button" id="rv-reset" class="px-3 py-1 text-xs rounded-md border border-neutral-300 bg-white hover:border-neutral-900 transition-colors">Reset</button>
+  </div>
+</div>`;
+
+const GANTRY_HTML = `
+<div class="h-full bg-neutral-50 flex items-center justify-center p-4">
+  <svg viewBox="0 0 480 260" class="w-full h-full max-w-xl" role="img" aria-label="Sketch of an X/Y gantry carrying a marker over a page while a star sticker outline is drawn" style="font-family:Inter,sans-serif">
+    <rect x="90" y="70" width="300" height="170" rx="4" fill="#fff" stroke="#d4d4d4" stroke-width="1.5"/>
+    <path d="M240 100 L254 140 L292 142 L262 166 L272 206 L240 184 L208 206 L218 166 L188 142 L226 140 Z" fill="none" stroke="#171717" stroke-width="2" stroke-linejoin="round" stroke-dasharray="5 4"/>
+    <path d="M70 30 V250 M410 30 V250" stroke="#a3a3a3" stroke-width="3" stroke-linecap="round"/>
+    <rect x="58" y="14" width="24" height="24" rx="3" fill="#fff" stroke="#171717" stroke-width="1.5"/>
+    <rect x="398" y="14" width="24" height="24" rx="3" fill="#fff" stroke="#171717" stroke-width="1.5"/>
+    <path d="M70 50 H410" stroke="#171717" stroke-width="4" stroke-linecap="round"/>
+    <rect x="224" y="38" width="32" height="24" rx="3" fill="#fff" stroke="#171717" stroke-width="1.5"/>
+    <path d="M240 62 V98" stroke="#059669" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="240" cy="100" r="3.5" fill="#059669"/>
+    <text x="266" y="48" font-size="11" fill="#737373">servo + marker</text>
+    <text x="100" y="12" font-size="11" fill="#737373">stepper</text>
+  </svg>
+</div>`;
+
+function mediaFor(p) {
+  if (p.media === 'gantry') return GANTRY_HTML;
+  if (p.media === 'life') return LIFE_HTML;
+  if (p.media === 'riscv') return RV_HTML;
+  return `<div class="bg-neutral-50"><img src="${p.img}" alt="${p.alt}" class="block w-full h-auto" loading="lazy"></div>`;
+}
+
+function cardHTML(p, i) {
+  const tags = p.tags.map(t => `<button type="button" class="tag" data-tag="${t}" title="Show ${TAGS[t][0]} projects">${TAGS[t][0]}</button>`).join('');
+  const links = p.links.map(([l, u]) => `<a href="${u}" target="_blank" rel="noopener noreferrer" class="text-link">${l}</a>`).join('');
+  return `
+  <article id="project-${p.id}" data-id="${p.id}" class="sch-row anchor">
+    <div class="chip${p.media === 'img' ? ' stack' : ''}">
+      <div class="chip-left p-5 flex flex-col">
+        <div class="chip-head flex items-center justify-between gap-3">
+          <span class="font-mono text-xs text-neutral-500">U${i + 1}</span>
+          <span class="inline-flex items-center gap-1.5 text-xs text-neutral-600"><i class="led ${p.status ? 'on' : ''}" aria-hidden="true"></i>${p.status || 'Complete'}</span>
+        </div>
+        <h3 class="font-semibold text-lg leading-snug text-neutral-900 mt-2">${p.title}</h3>
+        <p class="text-sm text-neutral-500 mt-1">${p.tools}</p>
+        ${p.role ? `<p class="text-sm text-neutral-800 mt-3"><span class="font-medium">My role:</span> ${p.role}</p>` : ''}
+        <p class="text-neutral-600 text-sm mt-3 leading-relaxed">${p.desc}</p>
+        <div class="flex flex-wrap gap-1.5 mt-4">${tags}</div>
+        <div class="note-slot mt-4" hidden></div>
+        <div class="flex items-center justify-between mt-auto pt-5 text-sm text-neutral-600">
+          <div class="flex items-center gap-5">${links}${p.note ? `<span class="text-neutral-500">${p.note}</span>` : ''}</div>
+          <button type="button" data-open="${p.id}" class="inline-flex items-center gap-1.5 font-medium text-neutral-900" aria-haspopup="dialog"><span>Open details</span><i class="fa-solid fa-expand text-xs" aria-hidden="true"></i></button>
+        </div>
+      </div>
+      <div class="chip-media relative ${p.media === 'img' ? '' : 'h-72'}">${mediaFor(p)}</div>
+    </div>
+  </article>`;
+}
+
+// Render cards, filter buttons and skills
+const grid = document.getElementById('projects-grid');
+grid.innerHTML = PROJECTS.map(cardHTML).join('');
+grid.insertAdjacentHTML('afterbegin', '<span class="bus-label" aria-hidden="true">VCC</span><span class="gnd" aria-hidden="true"></span>');
+(function () {
+  const bar = document.getElementById('filter-bar');
+  const chip = document.getElementById('skill-chip');
+  const mk = (key, label, icon, pressed) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'filter-btn'; b.dataset.filter = key; b.setAttribute('aria-pressed', String(pressed));
+    b.innerHTML = `<i class="${icon} text-xs" aria-hidden="true"></i><span>${label}</span>`;
+    bar.insertBefore(b, chip);
+  };
+  mk('all', 'All', 'fa-solid fa-table-cells-large', true);
+  Object.entries(TAGS).forEach(([k, [l, i]]) => mk(k, l, i, false));
+
+  const used = {};
+  PROJECTS.forEach(p => Object.keys(p.skills).forEach(k => { used[k] = (used[k] || 0) + 1; }));
+  document.getElementById('skills-grid').innerHTML = SKILL_GROUPS.map(([g, list]) => `
+    <div><h3 class="text-sm font-semibold text-neutral-900 mb-3">${g}</h3><div class="flex flex-wrap gap-2">` +
+    list.map(s => used[s]
+      ? `<button type="button" class="skill skill-link" data-skill="${s}" title="Show projects that use ${s}">${s}<span class="skill-n text-neutral-400 ml-1.5">${used[s]}</span></button>`
+      : `<span class="skill">${s}</span>`).join('') + `</div></div>`).join('');
+})();
+</script>
+
+<script>
+/* Filtering, skill notes and the details dialog */
+(function () {
+  const bar = document.getElementById('filter-bar');
+  const cards = [...document.querySelectorAll('#projects-grid > article')];
+  const status = document.getElementById('filter-status');
+  const chip = document.getElementById('skill-chip');
+  const chipLabel = document.getElementById('skill-chip-label');
+  const moreRow = document.getElementById('more-row');
+  const byId = Object.fromEntries(PROJECTS.map(p => [p.id, p]));
+
+  function setNote(card, skill) {
+    const slot = card.querySelector('.note-slot');
+    const text = skill && byId[card.dataset.id].skills[skill];
+    slot.hidden = !text;
+    if (!text) return;
+    const p = document.createElement('p');
+    p.className = 'skill-note';
+    const b = document.createElement('strong');
+    b.textContent = skill + ': ';
+    p.append(b, text);
+    slot.replaceChildren(p);
+  }
+
+  function apply(kind, value) {
+    let shown = 0;
+    cards.forEach(card => {
+      const p = byId[card.dataset.id];
+      const show = kind === 'all' || (kind === 'tag' ? p.tags.includes(value) : value in p.skills);
+      card.classList.toggle('dim', !show);
+      if (show) shown++;
+      setNote(card, kind === 'skill' ? value : null);
+      card.querySelectorAll('.tag').forEach(t => t.classList.toggle('on', kind === 'tag' && t.dataset.tag === value));
+    });
+    const active = kind === 'all' ? 'all' : (kind === 'tag' ? value : null);
+    bar.querySelectorAll('button[data-filter]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.filter === active)));
+    chip.hidden = kind !== 'skill';
+    if (kind === 'skill') {
+      chipLabel.textContent = 'Skill: ' + value;
+      chip.setAttribute('aria-label', 'Clear skill filter: ' + value);
+    }
+    status.textContent = shown + (shown === 1 ? ' project' : ' projects');
+    moreRow.hidden = kind !== 'all';
+  }
+
+  bar.addEventListener('click', e => {
+    const b = e.target.closest('button[data-filter]');
+    if (!b) return;
+    b.dataset.filter === 'all' ? apply('all') : apply('tag', b.dataset.filter);
+  });
+  chip.addEventListener('click', () => apply('all'));
+  document.getElementById('projects-grid').addEventListener('click', e => {
+    const t = e.target.closest('.tag');
+    if (t) apply(t.classList.contains('on') ? 'all' : 'tag', t.dataset.tag);
+    const o = e.target.closest('[data-open]');
+    if (o) openProject(o.dataset.open);
+    const left = e.target.closest('.chip-left');
+    if (left && !e.target.closest('a,button')) openProject(left.closest('article').dataset.id);
+  });
+  document.querySelectorAll('[data-skill]').forEach(btn => btn.addEventListener('click', () => {
+    apply('skill', btn.dataset.skill);
+    document.getElementById('projects').scrollIntoView();
+  }));
+  document.querySelectorAll('[data-show-all]').forEach(a => a.addEventListener('click', () => apply('all')));
+
+  // Details dialog
+  const dlg = document.getElementById('pd');
+  let current = null;
+  const visible = () => cards.filter(c => !c.classList.contains('dim')).map(c => c.dataset.id);
+
+  function fill(id) {
+    const p = byId[id];
+    current = id;
+    document.getElementById('pd-title').textContent = p.title;
+    document.getElementById('pd-tools').textContent = p.tools;
+    const skills = Object.entries(p.skills).map(([k, v]) =>
+      `<div class="sm:grid sm:grid-cols-[9rem_1fr] sm:gap-3"><dt class="font-medium text-neutral-800">${k}</dt><dd>${v}</dd></div>`).join('');
+    const links = p.links.map(([l, u]) => `<a href="${u}" target="_blank" rel="noopener noreferrer" class="text-link">${l}</a>`).join('');
+    document.getElementById('pd-body').innerHTML =
+      `${p.role ? `<div><h4 class="font-semibold text-neutral-800 mb-1">My role</h4><p>${p.role}</p></div>` : ''}
+       <p>${p.overview}</p>
+       <div><h4 class="font-semibold text-neutral-800 mb-1">Highlights</h4><ul class="list-disc pl-5 space-y-1">${p.points.map(x => `<li>${x}</li>`).join('')}</ul></div>
+       <div><h4 class="font-semibold text-neutral-800 mb-2">How I used each tool</h4><dl class="space-y-2">${skills}</dl></div>
+       ${p.toolchain ? `<p class="text-xs text-neutral-500"><strong>Toolchain:</strong> ${p.toolchain}</p>` : ''}
+       ${links || p.note ? `<div class="flex items-center gap-5 text-neutral-700">${links}${p.note ? `<span class="text-neutral-500">${p.note}</span>` : ''}</div>` : ''}`;
+    const v = visible(), i = v.indexOf(id);
+    document.getElementById('pd-count').textContent = (i + 1) + ' of ' + v.length;
+    dlg.scrollTop = 0;
+  }
+  function openProject(id) { fill(id); if (!dlg.open) dlg.showModal(); }
+  function move(d) {
+    const v = visible();
+    if (v.length < 2) return;
+    fill(v[(v.indexOf(current) + d + v.length) % v.length]);
+  }
+  document.getElementById('pd-prev').addEventListener('click', () => move(-1));
+  document.getElementById('pd-next').addEventListener('click', () => move(1));
+  document.getElementById('pd-close').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') move(-1);
+    if (e.key === 'ArrowRight') move(1);
+  });
+
+  apply('all');
+})();
+
+/* Navigation scroll-spy */
+(function () {
+  const links = document.querySelectorAll('.nav-link');
+  const sections = ['about', 'projects', 'experience', 'awards', 'skills', 'contact'].map(id => document.getElementById(id));
+  let ticking = false;
+  function update() {
+    ticking = false;
+    const y = window.scrollY;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    let current = 'about';
+    const line = y + window.innerHeight * 0.35;
+    sections.forEach(sec => { if (sec.offsetTop <= line) current = sec.id; });
+    if (max > 0 && max - y < 4) current = 'contact';
+    links.forEach(a => {
+      const on = a.dataset.section === current;
+      a.classList.toggle('active', on);
+      if (on) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+    });
+  }
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  update();
+})();
+
+/* Game of Life in the FPGA project */
+(function () {
+  const wrap = document.getElementById('life-wrap');
+  if (!wrap) return;
+  const canvas = document.getElementById('life-canvas');
+  const ctx = canvas.getContext('2d');
+  const media = document.getElementById('fpga-media');
+  const playBtn = document.getElementById('life-play');
+  const tabPlay = document.getElementById('tab-play');
+  const tabVideo = document.getElementById('tab-video');
+  const panelPlay = document.getElementById('panel-play');
+  const panelVideo = document.getElementById('panel-video');
+  const video = document.getElementById('fpga-video');
+
+  const CELL = 14;
+  const SPEEDS = [320, 210, 130, 80, 40]; // ms per generation, slow to fast
+  let stepMs = SPEEDS[2];
+  const GLIDER = [[1,0],[2,1],[0,2],[1,2],[2,2]];
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let cols = 0, rows = 0, W = 0, H = 0, offX = 0, offY = 0;
+  let grid = new Uint8Array(0), next = new Uint8Array(0);
+  let hue = 0, last = 0, raf = null;
+  let running = !reduceMotion, inView = true, tab = 'play', seeded = false;
+
+  function idx(x, y) { return ((y + rows) % rows) * cols + ((x + cols) % cols); }
+  function seed() { grid.fill(0); GLIDER.forEach(([dx, dy]) => { grid[idx(3 + dx, 3 + dy)] = 1; }); }
+
+  function resize() {
+    const w = wrap.clientWidth, h = wrap.clientHeight;
+    if (!w || !h) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = w; H = h;
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const c = Math.floor(w / CELL), r = Math.floor(h / CELL);
+    if (c !== cols || r !== rows) {
+      const ng = new Uint8Array(c * r);
+      for (let y = 0; y < Math.min(r, rows); y++)
+        for (let x = 0; x < Math.min(c, cols); x++) ng[y * c + x] = grid[y * cols + x];
+      cols = c; rows = r; grid = ng; next = new Uint8Array(c * r);
+      if (!seeded) { seed(); seeded = true; }
+    }
+    offX = (w - cols * CELL) / 2;
+    offY = (h - rows * CELL) / 2;
+    draw();
+  }
+
+  function step() {
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const n = grid[idx(x-1,y-1)] + grid[idx(x,y-1)] + grid[idx(x+1,y-1)] +
+                  grid[idx(x-1,y)] + grid[idx(x+1,y)] +
+                  grid[idx(x-1,y+1)] + grid[idx(x,y+1)] + grid[idx(x+1,y+1)];
+        const i = y * cols + x;
+        next[i] = grid[i] ? (n === 2 || n === 3 ? 1 : 0) : (n === 3 ? 1 : 0);
+      }
+    }
+    const t = grid; grid = next; next = t;
+    hue = (hue + 3) % 360;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        if (!grid[y * cols + x]) continue;
+        ctx.fillStyle = 'hsl(' + ((hue + (x + y) * 4) % 360) + ', 80%, 62%)';
+        ctx.fillRect(offX + x * CELL + 1, offY + y * CELL + 1, CELL - 2, CELL - 2);
+      }
+    }
+  }
+
+  function loop(t) {
+    raf = requestAnimationFrame(loop);
+    if (t - last < stepMs) return;
+    last = t; step(); draw();
+  }
+
+  function sync() {
+    const go = running && inView && tab === 'play' && !document.hidden;
+    if (go && raf === null) raf = requestAnimationFrame(loop);
+    if (!go && raf !== null) { cancelAnimationFrame(raf); raf = null; }
+  }
+
+  function setRunning(on) {
+    running = on;
+    const label = on ? 'Pause animation' : 'Play animation';
+    playBtn.setAttribute('aria-label', label);
+    playBtn.title = label;
+    playBtn.querySelector('i').className = 'fa-solid text-[11px] ' + (on ? 'fa-pause' : 'fa-play');
+    sync();
+  }
+  playBtn.addEventListener('click', () => setRunning(!running));
+  document.getElementById('life-speed').addEventListener('input', e => { stepMs = SPEEDS[Number(e.target.value) - 1]; });
+
+  function setTab(t) {
+    tab = t;
+    const play = t === 'play';
+    panelPlay.classList.toggle('hidden', !play);
+    panelVideo.classList.toggle('hidden', play);
+    tabPlay.setAttribute('aria-pressed', String(play));
+    tabVideo.setAttribute('aria-pressed', String(!play));
+    if (play) { video.pause(); resize(); }
+    sync();
+  }
+  tabPlay.addEventListener('click', () => setTab('play'));
+  tabVideo.addEventListener('click', () => setTab('video'));
+
+  new IntersectionObserver(e => { inView = e[0].isIntersecting; sync(); }, { threshold: 0.1 }).observe(media);
+  document.addEventListener('visibilitychange', sync);
+  new ResizeObserver(resize).observe(wrap);
+
+  resize();
+  setRunning(running);
+})();
+
+/* RISC-V multicycle stepper (a visualization, not simulation output) */
+(function () {
+  const root = document.getElementById('rv-demo');
+  if (!root) return;
+
+  const STAGES = [['F','Fetch','Instr mem'],['D','Decode','Regfile'],['E','Execute','ALU'],['M','Memory','Data mem'],['W','Writeback','Regfile']];
+  const PROG = [
+    { asm:'addi x1, x0, 5',  op:'addi', st:'FDEW',  ex:'ALU: x0 + 5 = 5', wb:[1,5] },
+    { asm:'addi x2, x0, 3',  op:'addi', st:'FDEW',  ex:'ALU: x0 + 3 = 3', wb:[2,3] },
+    { asm:'add  x3, x1, x2', op:'add',  st:'FDEW',  ex:'ALU: 5 + 3 = 8',  wb:[3,8] },
+    { asm:'sw   x3, 0(x0)',  op:'sw',   st:'FDEM',  ex:'ALU: x0 + 0 = address 0x0000', mem:'write 8 to data memory at 0x0000', memw:8 },
+    { asm:'lw   x4, 0(x0)',  op:'lw',   st:'FDEMW', ex:'ALU: x0 + 0 = address 0x0000', mem:'read 8 from data memory at 0x0000', wb:[4,8] }
+  ];
+
+  const chipsEl = document.getElementById('rv-chips');
+  const progEl = document.getElementById('rv-prog');
+  const stateEl = document.getElementById('rv-state');
+  const msgEl = document.getElementById('rv-msg');
+  const runBtn = document.getElementById('rv-run');
+
+  const chips = STAGES.map(([, name, block]) => {
+    const c = document.createElement('div'); c.className = 'rv-chip';
+    const b = document.createElement('b'); b.textContent = name;
+    const s = document.createElement('span'); s.textContent = block;
+    c.append(b, s); chipsEl.append(c); return c;
+  });
+  const lines = PROG.map((p, k) => {
+    const li = document.createElement('li'); li.className = 'rv-line';
+    li.textContent = '0x' + (0x1000 + 4 * k).toString(16) + ' ' + p.asm;
+    progEl.append(li); return li;
+  });
+  const vals = {};
+  ['PC','x1','x2','x3','x4','mem[0]'].forEach(k => {
+    const row = document.createElement('div'); row.className = 'rv-row';
+    const l = document.createElement('span'); l.textContent = k;
+    const v = document.createElement('span'); v.className = 'rv-val';
+    row.append(l, v); stateEl.append(row); vals[k] = v;
+  });
+
+  let i = 0, s = 0, regs = [0,0,0,0,0], mem = 0, hit = null, timer = null, inView = true;
+  let running = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function apply() {
+    const ins = PROG[i], cur = ins.st[s];
+    hit = null;
+    if (cur === 'M' && ins.memw !== undefined) { mem = ins.memw; hit = 'mem[0]'; }
+    if (cur === 'W' && ins.wb) { regs[ins.wb[0]] = ins.wb[1]; hit = 'x' + ins.wb[0]; }
+  }
+  function message(ins, cur) {
+    if (cur === 'F') return 'Fetch: read the instruction at PC from instruction memory.';
+    if (cur === 'D') return 'Decode: it is ' + ins.op + '. Read the source registers.';
+    if (cur === 'E') return 'Execute: ' + ins.ex + '.';
+    if (cur === 'M') return 'Memory: ' + ins.mem + '.';
+    return 'Writeback: x' + ins.wb[0] + ' gets ' + ins.wb[1] + '.';
+  }
+  function render() {
+    const ins = PROG[i], cur = ins.st[s];
+    chips.forEach((c, k) => {
+      c.classList.toggle('on', STAGES[k][0] === cur);
+      c.classList.toggle('skip', !ins.st.includes(STAGES[k][0]));
+    });
+    lines.forEach((l, k) => l.classList.toggle('on', k === i));
+    vals.PC.textContent = '0x' + (0x1000 + 4 * i).toString(16);
+    for (let r = 1; r <= 4; r++) vals['x' + r].textContent = regs[r];
+    vals['mem[0]'].textContent = mem;
+    Object.keys(vals).forEach(k => vals[k].classList.toggle('hit', k === hit));
+    msgEl.textContent = message(ins, cur);
+  }
+  function tick() {
+    s++;
+    if (s >= PROG[i].st.length) {
+      s = 0; i++;
+      if (i >= PROG.length) { i = 0; regs = [0,0,0,0,0]; mem = 0; }
+    }
+    apply(); render();
+  }
+  function sync() {
+    const go = running && inView && !document.hidden;
+    if (go && !timer) timer = setInterval(tick, 1100);
+    if (!go && timer) { clearInterval(timer); timer = null; }
+  }
+  function setRunning(on) { running = on; runBtn.textContent = on ? 'Pause' : 'Run'; sync(); }
+
+  runBtn.addEventListener('click', () => setRunning(!running));
+  document.getElementById('rv-step').addEventListener('click', () => { setRunning(false); tick(); });
+  document.getElementById('rv-reset').addEventListener('click', () => { i = 0; s = 0; regs = [0,0,0,0,0]; mem = 0; hit = null; render(); });
+  new IntersectionObserver(e => { inView = e[0].isIntersecting; sync(); }, { threshold: 0.1 }).observe(root);
+  document.addEventListener('visibilitychange', sync);
+
+  render();
+  setRunning(running);
+})();
+</script>
+</body>
+</html>
