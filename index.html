@@ -267,6 +267,45 @@ const TAGS = {
 
 const PROJECTS = [
   {
+<<<<<<< HEAD
+=======
+    id: 'riscv', wide: true, media: 'riscv', status: 'In progress',
+    title: 'Multicycle RISC-V Processor (RV32I)',
+    tools: 'SystemVerilog, RISC-V, OSS CAD Suite, iceBlinkPico',
+    tags: ['fpga', 'hardware'],
+    desc: 'A 32-bit RISC-V processor built from scratch in SystemVerilog. It runs one instruction at a time, uses separate instruction and data memories, and will blink the iceBlinkPico LEDs by running an assembly program on its own hardware. The animation is a visualization: it steps a tiny hard-coded program through the five stages the core will use.',
+    overview: 'The processor is unpipelined and multicycle with a Harvard architecture: instruction and data memories are separate but share one address space. A provided memory module supplies 8 kB of physical memory, with 4 kB of data memory from <code>0x0000</code> to <code>0x0FFF</code> and 4 kB of instruction memory from <code>0x1000</code> to <code>0x1FFF</code>. Memory-mapped peripherals at the top of the address space include 8-bit PWM generators for the user LED and RGB LEDs, plus two running 32-bit timers that count milliseconds and microseconds.',
+    points: [
+      '<strong>Instruction set:</strong> the full RV32I base set, except ecall, ebreak and the CSR instructions.',
+      '<strong>Design:</strong> synthesizable SystemVerilog that uses the provided memory module.',
+      '<strong>Verification:</strong> an iverilog testbench with simulation results for each class of RV32I instruction.',
+      '<strong>Demo:</strong> a RISC-V assembly program that blinks the LEDs through the peripherals in an interesting pattern.'
+    ],
+    toolchain: 'OSS CAD Suite, Icarus Verilog. Group project.',
+    links: [], note: 'Expected December 2026, repo coming soon',
+    skills: {
+      'SystemVerilog': 'Datapath, control and memory-mapped peripherals written from scratch.',
+      'OSS CAD Suite': 'Synthesis and simulation toolchain for the core.',
+      'Icarus Verilog': 'Testbench with results for each class of RV32I instruction (planned).',
+      'iCE40 FPGA': 'Runs on the iceBlinkPico, blinking LEDs through memory-mapped PWM.'
+    }
+  },
+  {
+    id: 'sticker', media: 'gantry', status: 'In progress',
+    title: 'CNC Sticker Maker',
+    tools: 'Arduino, stepper motors, servo, X/Y gantry',
+    tags: ['arduino', 'hardware'],
+    desc: 'A page-sized X/Y gantry that draws sticker designs with a marker. Stepper motors move the carriage, a servo lifts and lowers the pen, and an Arduino runs the motion from a drawing program. Team project with four teammates.',
+    overview: 'For the MVP we want to build a roughly page-sized X/Y gantry driven by stepper motors, using either belts or leadscrews. A Sharpie or other marker is attached to the gantry through a servo-driven up/down mechanism, and software on an Arduino actuates the motors and servo from a drawing program. Users pick from a list of preset sticker designs.',
+    points: [
+      '<strong>Minimum Viable Product:</strong> draw preset stickers with the X/Y gantry and a servo-lifted marker.',
+      '<strong>Software stretch goals:</strong> let users draw their own designs, which means calculating the points and paths the gantry follows, and a Raspberry Pi display for picking pre-drawn designs.'
+    ],
+    links: [], note: 'Design stage',
+    skills: { 'Arduino / C++': 'Planned: runs the stepper and servo motion from a drawing program.' }
+  },
+  {
+>>>>>>> f97578704fc5579c7adadd96c1933e0f058edd5c
     id: 'fpga', media: 'life',
     title: 'FPGA Game of Life & Color Cycling Matrix',
     tools: 'SystemVerilog, Python, iCE40 FPGA',
